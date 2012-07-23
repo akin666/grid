@@ -167,11 +167,13 @@ float getNoiseAt( float x , float y , float *map , int dimension , int maxrect )
 	// how many times? maxrect / max
 	int times = sqrt( maxrect/dimension ) + 1;
 
+	int upscale;
 	float val = 0;
 	float weight = 0.5f;
-	for( int i = 1 ; i < times ; ++i )
+	for( int i = times ; i >= 0 ; --i )
 	{
-		val += samplePointSquare( x * i , y * i , map , dimension ) * weight;
+		upscale = pow( 2 , i );
+		val += samplePointSquare( x * upscale , y * upscale , map , dimension ) * weight;
 		weight /= 2;
 	}
 	return val;
