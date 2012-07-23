@@ -6,6 +6,8 @@
  */
 
 #include "create.hpp"
+#include <fstream>
+#include <iostream>
 
 Create::Create()
 {
@@ -135,6 +137,32 @@ float getPoint( float *map , int px , int py , int max )
 
 float samplePointSquare( float x , float y , float *map , int max )
 {
+	/*
+	x = fmod( x , max + 1 );
+	y = fmod( y , max + 1 );
+	int x1 = x;
+	int y1 = y;
+	int x2 = fmod( x + 1 , max + 1 );
+	int y2 = fmod( y + 1 , max + 1 );
+
+	int oa = y1*max + x1;
+	int ob = y1*max + x2;
+	int oc = y2*max + x1;
+	int od = y2*max + x2;
+
+	// calculate the normalized 'weights' for each dimensions
+	float fpx = x - x1;
+	float fpy = y - y1;
+
+	float fpx2 = 1.0f - fpx;
+	float fpy2 = 1.0f - fpy;
+
+	double xcol = map[oa] * fpx2 + map[ob] * fpx;
+	double xcol2 = map[oc] * fpx2 + map[od] * fpx;
+
+	// (( A*xweight + B*xweight2 ) * yweight) + (( C*xweight + D*xweight2 ) * yweight2)
+	return ( xcol * fpy2) + (xcol2 * fpy);
+	*/
 	x = fmod( x , max );
 	y = fmod( y , max );
 
@@ -152,31 +180,78 @@ float samplePointSquare( float x , float y , float *map , int max )
 	int od = oy2+((ix+1)%max);
 
 	// calculate the normalized 'weights' for each dimensions
-	float fpx = x - ix;
-	float fpy = y - iy;
+	double fpx = x - ix;
+	double fpy = y - iy;
 
-	float fpx2 = 1.0f - fpx;
-	float fpy2 = 1.0f - fpx;
+	double fpx2 = 1.0f - fpx;
+	double fpy2 = 1.0f - fpy;
+	double xx1 = map[oa] * fpx2 + map[ob] * fpx;
+	double xx2 = map[oc] * fpx2 + map[od] * fpx;
 
 	// (( A*xweight + B*xweight2 ) * yweight) + (( C*xweight + D*xweight2 ) * yweight2)
-	return (( map[oa] * fpx2 + map[ob] * fpx ) * fpy2) + (( map[oc] * fpx2 + map[od] * fpx ) * fpy);
+	return (xx1 * fpy2) + (xx2 * fpy);
 }
 
 float getNoiseAt( float x , float y , float *map , int dimension , int maxrect )
 {
-	// how many times? maxrect / max
-	int times = sqrt( maxrect/dimension ) + 1;
-
-	int upscale;
+//	return samplePointSquare( x*0.2 , y*0.2 , map , dimension );
+	float upscale = dimension / (float)maxrect;
 	float val = 0;
 	float weight = 0.5f;
-	for( int i = times ; i >= 0 ; --i )
+	while( upscale < 1.0f )
 	{
-		upscale = pow( 2 , i );
 		val += samplePointSquare( x * upscale , y * upscale , map , dimension ) * weight;
-		weight /= 2;
+		upscale *= 2.0f;
+		weight /= 2.0f;
 	}
 	return val;
+}
+
+void outputPerlinImage( long vertexCountSide , int bsize , int size , float *minimap , int dimension )
+{
+	std::string filename( "pic.tga" );
+	std::ofstream o(filename.c_str(), std::ios::out | std::ios::binary);
+
+	//Write the header
+	o.put(0);
+	o.put(0);
+	o.put(2);                         // uncompressed RGB
+	o.put(0); 	o.put(0);
+	o.put(0); 	o.put(0);
+	o.put(0);
+	o.put(0); 	o.put(0);           // X origin
+	o.put(0); 	o.put(0);           // y origin
+	o.put((vertexCountSide & 0x00FF));
+	o.put((vertexCountSide & 0xFF00) / 256);
+	o.put((vertexCountSide & 0x00FF));
+	o.put((vertexCountSide & 0xFF00) / 256);
+	o.put(32);                        // 24 bit bitmap
+	o.put(0);
+
+	float current;
+	float yspot;
+	float xspot;
+	char val;
+	for( long y = 0 ; y < vertexCountSide ; ++y )
+	{
+		yspot = y * size;
+		for( long x = 0 ; x < vertexCountSide ; ++x )
+		{
+			xspot = x * size;
+			current = getNoiseAt( xspot , yspot , minimap , dimension , bsize );
+
+			val = (char)(current) & 0xFF;
+
+			// BGRA
+			o.put( val );
+			o.put( val );
+			o.put( val );
+			o.put( 0xFF );
+		}
+	}
+
+	//close the file
+	o.close();
 }
 
 void Create::perlin( int bsize , int size , float min , float max , int dimension )
@@ -191,9 +266,7 @@ void Create::perlin( int bsize , int size , float min , float max , int dimensio
 	for( int i = 0 ; i < randomSize ; ++i )
 	{
 		minimap[i] = getRandom<float>(min , max);
-		std::cout << minimap[i] << " ";
 	}
-	std::cout << std::endl;
 
 	// Now we have tiny random square..
 	// We use virtual square to map the perlin noise on to the triangle.
@@ -214,11 +287,12 @@ void Create::perlin( int bsize , int size , float min , float max , int dimensio
 	long vertexCountSide = bsize / size;
 	//long vertexCountTotal = getNumberOfPointsInTriangle( vertexCountSide );
 
+	outputPerlinImage( vertexCountSide , bsize , size , minimap , dimension );
 	// Open File
 
+	return;
 	float current;
 
-	//float half = bsize/2.0f;
 	long xmax;
 	float yspot;
 	float xspot;
