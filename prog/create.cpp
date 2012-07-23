@@ -195,14 +195,14 @@ float samplePointSquare( float x , float y , float *map , int max )
 float getNoiseAt( float x , float y , float *map , int dimension , int maxrect )
 {
 //	return samplePointSquare( x*0.2 , y*0.2 , map , dimension );
-	float upscale = dimension / (float)maxrect;
+	float upscale = (dimension / (float)maxrect)/3.0f;
 	float val = 0;
 	float weight = 0.5f;
 	while( upscale < 1.0f )
 	{
 		val += samplePointSquare( x * upscale , y * upscale , map , dimension ) * weight;
 		upscale *= 2.0f;
-		weight /= 2.0f;
+		weight /= 1.5f;
 	}
 	return val;
 }
@@ -290,7 +290,6 @@ void Create::perlin( int bsize , int size , float min , float max , int dimensio
 	outputPerlinImage( vertexCountSide , bsize , size , minimap , dimension );
 	// Open File
 
-	return;
 	float current;
 
 	long xmax;
@@ -304,10 +303,10 @@ void Create::perlin( int bsize , int size , float min , float max , int dimensio
 		for( long x = 0 ; x < xmax ; ++x )
 		{
 			current = getNoiseAt( xspot + (x * size) , yspot , minimap , dimension , bsize );
-			std::cout << current << " ";
+//			std::cout << current << " ";
 			// output current
 		}
-		std::cout << std::endl;
+//		std::cout << std::endl;
 	}
 	// close file.
 }
