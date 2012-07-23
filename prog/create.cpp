@@ -165,7 +165,7 @@ float samplePointSquare( float x , float y , float *map , int max )
 float getNoiseAt( float x , float y , float *map , int dimension , int maxrect )
 {
 	// how many times? maxrect / max
-	int times = maxrect/dimension;
+	int times = sqrt( maxrect/dimension ) + 1;
 
 	float val = 0;
 	float weight = 0.5f;
@@ -189,7 +189,9 @@ void Create::perlin( int bsize , int size , float min , float max , int dimensio
 	for( int i = 0 ; i < randomSize ; ++i )
 	{
 		minimap[i] = getRandom<float>(min , max);
+		std::cout << minimap[i] << " ";
 	}
+	std::cout << std::endl;
 
 	// Now we have tiny random square..
 	// We use virtual square to map the perlin noise on to the triangle.
@@ -222,7 +224,7 @@ void Create::perlin( int bsize , int size , float min , float max , int dimensio
 	{
 		xmax = y+1;
 		yspot = y * size;
-		xspot = -(xmax / 2.0f) * size;
+		xspot = -((xmax-1) / 2.0f) * size;
 		for( long x = 0 ; x < xmax ; ++x )
 		{
 			current = getNoiseAt( xspot + (x * size) , yspot , minimap , dimension , bsize );
