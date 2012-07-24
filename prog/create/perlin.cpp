@@ -32,6 +32,7 @@ Perlin::~Perlin()
 bool Perlin::initialize( const StrStrMap& args )
 {
 	bool error = false;
+	std::string style;
 
 	if( !fromData( args , "bigsize" , bigsize ) )
 	{
@@ -53,8 +54,8 @@ bool Perlin::initialize( const StrStrMap& args )
 		std::cout << "Error no max specified." << std::endl;
 		error = true;
 	}
-	// validity Checks!
 
+	// validity Checks!
 	if( min >= max || bigsize < size )
 	{
 		std::cout << "Error validity check failed." << std::endl;

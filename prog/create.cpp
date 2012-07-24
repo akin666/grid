@@ -9,6 +9,12 @@
 #include "create/noiseinterface.hpp"
 #include "create/perlin.hpp"
 
+#define CREATE_STYLE_NONE			0x0000
+#define CREATE_STYLE_TRIANGLE		0x0001
+#define CREATE_STYLE_RECTANGLE		0x0002
+
+#define CREATE_STYLE_DEFAULT		CREATE_STYLE_NONE
+
 using namespace create;
 
 Create::Create()
@@ -32,8 +38,10 @@ bool Create::run( StrStrMap& args )
 	std::string type;
 	NoiseInterface *noiseptr = NULL;
 
+	bool debug = false;
 	float bigsize = 0;
 	float size = 0;
+	int style = CREATE_STYLE_DEFAULT;
 
 	bool error = false;
 	if( !fromData( args , "bigsize" , bigsize ) )
@@ -51,7 +59,34 @@ bool Create::run( StrStrMap& args )
 		return false;
 	}
 
+	// style
+	std::string tmpstr = "triangle";
+	if( !fromData( args , "style" , tmpstr ) )
+	{
+		tmpstr = "triangle";
+		std::cout << "Warning! No style specified, defaulting to "<< tmpstr <<"." << std::endl;
+	}
+	if( tmpstr == "triangle" )
+	{
+		style |= CREATE_STYLE_TRIANGLE;
+	}
+	else if( tmpstr == "rectangle" )
+	{
+		style |= CREATE_STYLE_RECTANGLE;
+	}
 
+	// debug
+	if( fromData( args , "debug" , tmpstr ) )
+	{
+		debug = false;
+		if( tmpstr == "true" )
+		{
+			debug = true;
+		}
+		std::cout << "Warning! debug set to '"<< (debug?"true":"false") <<"'." << std::endl;
+	}
+
+	// create
 	if( !fromData( args , "create" , type ) )
 	{
 		std::cout << "Warning, no create type specified, defaulting to perlin." << std::endl;
@@ -81,9 +116,13 @@ bool Create::run( StrStrMap& args )
 		return false;
 	}
 
-	if( !noise.debugOutput() )
+	if( debug )
 	{
-		return false;
+		if( !noise.debugOutput() )
+		{
+			std::cout << "Error while debug output." << std::endl;
+			return false;
+		}
 	}
 
 	// Open File
@@ -92,18 +131,44 @@ bool Create::run( StrStrMap& args )
 	long xmax;
 	float yspot;
 	float xspot;
-	for( long y = 0 ; y < vertexCountSide ; ++y )
+
+	switch( style )
 	{
-		xmax = y+1;
-		yspot = y * size;
-		xspot = -((xmax-1) / 2.0f) * size;
-		for( long x = 0 ; x < xmax ; ++x )
+		case CREATE_STYLE_TRIANGLE :
 		{
-			current = noise.getPointAt( xspot + (x * size) , yspot );
-//			std::cout << current << " ";
-			// output current
+			for( long y = 0 ; y < vertexCountSide ; ++y )
+			{
+				xmax = y+1;
+				yspot = y * size;
+				xspot = -((xmax-1) / 2.0f) * size;
+				for( long x = 0 ; x < xmax ; ++x )
+				{
+					current = noise.getPointAt( xspot + (x * size) , yspot );
+		//			std::cout << current << " ";
+					// output current
+				}
+		//		std::cout << std::endl;
+			}
+			break;
 		}
-//		std::cout << std::endl;
+		case CREATE_STYLE_RECTANGLE :
+		{
+			for( long y = 0 ; y < vertexCountSide ; ++y )
+			{
+				yspot = y * size;
+				for( long x = 0 ; x < vertexCountSide ; ++x )
+				{
+					current = noise.getPointAt( x * size , yspot );
+		//			std::cout << current << " ";
+					// output current
+				}
+		//		std::cout << std::endl;
+			}
+			break;
+		}
+		default:
+			std::cout << "No output style specified." << std::endl;
+			break;
 	}
 	// close file.
 
