@@ -8,6 +8,8 @@
 #include "create.hpp"
 #include "create/noiseinterface.hpp"
 #include "create/perlin.hpp"
+#include <fstream>
+#include <iostream>
 
 #define CREATE_STYLE_NONE			0x0000
 #define CREATE_STYLE_TRIANGLE		0x0001
@@ -38,11 +40,17 @@ bool Create::run( StrStrMap& args )
 	std::string type;
 	NoiseInterface *noiseptr = NULL;
 
+	std::string outputFile;
 	bool debug = false;
 	float size = 0;
 	int style = CREATE_STYLE_DEFAULT;
 
 	bool error = false;
+	if( !fromData( args , "create-out" , outputFile ) )
+	{
+		std::cout << "Error no create output ('create-out') specified." << std::endl;
+		error = true;
+	}
 	if( !fromData( args , "size" , size ) )
 	{
 		std::cout << "Error no size specified." << std::endl;
@@ -115,11 +123,20 @@ bool Create::run( StrStrMap& args )
 		if( !noise.debugOutput() )
 		{
 			std::cout << "Error while debug output." << std::endl;
+			delete noiseptr;
 			return false;
 		}
 	}
 
 	// Open File
+	std::ofstream output(outputFile.c_str(), std::ios::out | std::ios::binary);
+	if( !output.is_open() )
+	{
+		std::cout << "Error output opening output '" << outputFile << "'." << std::endl;
+		delete noiseptr;
+		return false;
+	}
+
 	float current;
 	long xmax;
 	float yspot;
@@ -137,10 +154,8 @@ bool Create::run( StrStrMap& args )
 				for( long x = 0 ; x < xmax ; ++x )
 				{
 					current = noise.getPointAt( xspot + x , yspot );
-		//			std::cout << current << " ";
-					// output current
+					output.put( current );
 				}
-		//		std::cout << std::endl;
 			}
 			break;
 		}
@@ -152,10 +167,8 @@ bool Create::run( StrStrMap& args )
 				for( long x = 0 ; x < size ; ++x )
 				{
 					current = noise.getPointAt( x , yspot );
-		//			std::cout << current << " ";
-					// output current
+					output.put( current );
 				}
-		//		std::cout << std::endl;
 			}
 			break;
 		}
@@ -164,6 +177,7 @@ bool Create::run( StrStrMap& args )
 			break;
 	}
 	// close file.
+	output.close();
 
 	delete noiseptr;
 	return true;
