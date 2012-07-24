@@ -24,15 +24,15 @@ protected:
 	long vertexCountSide;
 	float *map;
 
-	float getNoiseAt( float x , float y );
-	float samplePointSquare( float x , float y );
+	float getNoiseAt( float x , float y ) const;
+	float samplePointSquare( float x , float y ) const;
 public:
 	Perlin();
 	virtual ~Perlin();
 
-	virtual bool initialize( StrStrMap& args );
-	virtual bool debugOutput();
-	virtual float getPointAt( float x , float y );
+	virtual bool initialize( const StrStrMap& args );
+	virtual bool debugOutput() const;
+	virtual float getPointAt( float x , float y ) const;
 };
 
 } // namespace create 

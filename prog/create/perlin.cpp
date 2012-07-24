@@ -13,14 +13,23 @@ namespace create
 {
 
 Perlin::Perlin()
+: bigsize( 0 ),
+  size( 0 ),
+  min( 0 ),
+  max( 0 ),
+  dimension( 0 ),
+  vertexCountSide( 0 ),
+  map( NULL )
 {
 }
 
 Perlin::~Perlin()
 {
+	delete[] map;
+	map = NULL;
 }
 
-bool Perlin::initialize( StrStrMap& args )
+bool Perlin::initialize( const StrStrMap& args )
 {
 	bool error = false;
 
@@ -67,8 +76,11 @@ bool Perlin::initialize( StrStrMap& args )
 
 	// Generate random map.
 	int randomPlaneSize = dimension * dimension;
-	map = new float[ randomPlaneSize ];
-	if( map == NULL )
+	try
+	{
+		map = new float[ randomPlaneSize ];
+	}
+	catch( ... )
 	{
 		return false;
 	}
@@ -80,7 +92,7 @@ bool Perlin::initialize( StrStrMap& args )
 	return true;
 }
 
-bool Perlin::debugOutput()
+bool Perlin::debugOutput() const
 {
 	if( map == NULL )
 	{
@@ -130,14 +142,16 @@ bool Perlin::debugOutput()
 
 	//close the file
 	o.close();
+
+	return true;
 }
 
-float Perlin::getPointAt( float x , float y )
+float Perlin::getPointAt( float x , float y ) const
 {
 	return getNoiseAt( x , y );
 }
 
-float Perlin::samplePointSquare( float x , float y )
+float Perlin::samplePointSquare( float x , float y ) const
 {
 	/*
 	x = fmod( x , max + 1 );
@@ -194,7 +208,7 @@ float Perlin::samplePointSquare( float x , float y )
 	return (xx1 * fpy2) + (xx2 * fpy);
 }
 
-float Perlin::getNoiseAt( float x , float y )
+float Perlin::getNoiseAt( float x , float y ) const
 {
 //	return samplePointSquare( x*0.2 , y*0.2 , map , dimension );
 	float upscale = (dimension / (float)bigsize)/3.0f;

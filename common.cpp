@@ -9,9 +9,9 @@
 
 
 template <>
-bool fromData( StrStrMap& map , std::string key , std::string& target )
+bool fromData( const StrStrMap& map , const std::string& key , std::string& target )
 {
-	StrStrMap::iterator iter = map.find( key );
+	StrStrMap::const_iterator iter = map.find( key );
 	if( iter != map.end() )
 	{
 		target = iter->second;

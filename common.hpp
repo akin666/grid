@@ -42,9 +42,9 @@ T to_ot( const F from )
 }
 
 template <class CType>
-bool fromData( StrStrMap& map , std::string key , CType& target )
+bool fromData( const StrStrMap& map , const std::string& key , CType& target )
 {
-	StrStrMap::iterator iter = map.find( key );
+	StrStrMap::const_iterator iter = map.find( key );
 	if( iter != map.end() )
 	{
 		target = to_ot<CType, std::string>( iter->second );
@@ -54,6 +54,6 @@ bool fromData( StrStrMap& map , std::string key , CType& target )
 }
 
 template <>
-bool fromData( StrStrMap& map , std::string key , std::string& target );
+bool fromData( const StrStrMap& map , const std::string& key , std::string& target );
 
 #endif // COMMON_HPP_ 

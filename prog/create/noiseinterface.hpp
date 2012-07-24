@@ -18,9 +18,9 @@ class NoiseInterface
 public:
 	virtual ~NoiseInterface() {}
 
-	virtual bool initialize( StrStrMap& args ) = 0;
-	virtual bool debugOutput() = 0;
-	virtual float getPointAt( float x , float y ) = 0;
+	virtual bool initialize( const StrStrMap& args ) = 0;
+	virtual bool debugOutput() const = 0;
+	virtual float getPointAt( float x , float y ) const = 0;
 };
 
 } // namespace create 

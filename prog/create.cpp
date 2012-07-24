@@ -46,6 +46,10 @@ bool Create::run( StrStrMap& args )
 		std::cout << "Error no size specified." << std::endl;
 		error = true;
 	}
+	if( error )
+	{
+		return false;
+	}
 
 
 	if( !fromData( args , "create" , type ) )
@@ -54,7 +58,7 @@ bool Create::run( StrStrMap& args )
 		type = "perlin";
 	}
 
-	// Got all params, generate.
+	// Create noise function.
 	if( type == "perlin" )
 	{
 		noiseptr = new Perlin;
@@ -103,6 +107,7 @@ bool Create::run( StrStrMap& args )
 	}
 	// close file.
 
+	delete noiseptr;
 	return true;
 }
 
