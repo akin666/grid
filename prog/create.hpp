@@ -13,7 +13,7 @@
 class Create
 {
 public:
-	void perlin( int bsize , int size , float min , float max , int dimension );
+	void perlin( float bsize , float size , float min , float max , int dimension );
 public:
 	Create();
 	virtual ~Create();

@@ -1,5 +1,5 @@
 //============================================================================
-// Name        : plane.cpp
+// Name        : main.cpp
 // Author      : Mikael Korpela
 // Version     :
 // Copyright   : all rights reserved

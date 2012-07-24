@@ -18,6 +18,18 @@
 
 typedef std::map<std::string , std::string> StrStrMap;
 
+template <class CType>
+CType getRandom()
+{
+	return rand()/((CType)RAND_MAX);
+}
+
+template <class CType>
+CType getRandom(CType min , CType max)
+{
+	CType diff = max - min;
+	return min + (getRandom<double>() * diff);
+}
 
 template<typename T, typename F>
 T to_ot( const F from )
