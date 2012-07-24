@@ -19,7 +19,6 @@ Perlin::Perlin()
   max( 0 ),
   extraUpscale( 1.0f ),
   dimension( 0 ),
-  vertexCountSide( 0 ),
   map( NULL )
 {
 }
@@ -35,11 +34,6 @@ bool Perlin::initialize( const StrStrMap& args )
 	bool error = false;
 	std::string style;
 
-	if( !fromData( args , "bigsize" , bigsize ) )
-	{
-		std::cout << "Error no bigsize specified." << std::endl;
-		error = true;
-	}
 	if( !fromData( args , "size" , size ) )
 	{
 		std::cout << "Error no size specified." << std::endl;
@@ -61,7 +55,7 @@ bool Perlin::initialize( const StrStrMap& args )
 	}
 
 	// validity Checks!
-	if( min >= max || bigsize < size )
+	if( min >= max || size < 1 )
 	{
 		std::cout << "Error validity check failed." << std::endl;
 		error = true;
@@ -77,8 +71,6 @@ bool Perlin::initialize( const StrStrMap& args )
 	{
 		return false;
 	}
-
-	vertexCountSide = bigsize / size;
 
 	// Generate random map.
 	int randomPlaneSize = dimension * dimension;
@@ -108,6 +100,7 @@ bool Perlin::debugOutput() const
 	std::string filename( "pic.tga" );
 	std::ofstream o(filename.c_str(), std::ios::out | std::ios::binary);
 
+	long rlsize = size;
 	//Write the header
 	o.put(0);
 	o.put(0);
@@ -117,24 +110,20 @@ bool Perlin::debugOutput() const
 	o.put(0);
 	o.put(0); 	o.put(0);           // X origin
 	o.put(0); 	o.put(0);           // y origin
-	o.put((vertexCountSide & 0x00FF));
-	o.put((vertexCountSide & 0xFF00) / 256);
-	o.put((vertexCountSide & 0x00FF));
-	o.put((vertexCountSide & 0xFF00) / 256);
+	o.put((rlsize & 0x00FF));
+	o.put((rlsize & 0xFF00) / 256);
+	o.put((rlsize & 0x00FF));
+	o.put((rlsize & 0xFF00) / 256);
 	o.put(32);                        // 24 bit bitmap
 	o.put(0);
 
 	float current;
-	float yspot;
-	float xspot;
 	char val;
-	for( long y = 0 ; y < vertexCountSide ; ++y )
+	for( long y = 0 ; y < rlsize ; ++y )
 	{
-		yspot = y * size;
-		for( long x = 0 ; x < vertexCountSide ; ++x )
+		for( long x = 0 ; x < rlsize ; ++x )
 		{
-			xspot = x * size;
-			current = getNoiseAt( (float)xspot , (float)yspot );
+			current = getNoiseAt( x , y );
 
 			val = (char)(current) & 0xFF;
 
@@ -217,7 +206,7 @@ float Perlin::samplePointSquare( float x , float y ) const
 float Perlin::getNoiseAt( float x , float y ) const
 {
 //	return samplePointSquare( x*0.2 , y*0.2 , map , dimension );
-	float upscale = (dimension / (float)bigsize)/extraUpscale;
+	float upscale = (dimension / (float)size)/extraUpscale;
 	float val = 0;
 	float weight = 0.5f;
 	while( upscale < 1.0f )

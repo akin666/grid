@@ -39,16 +39,10 @@ bool Create::run( StrStrMap& args )
 	NoiseInterface *noiseptr = NULL;
 
 	bool debug = false;
-	float bigsize = 0;
 	float size = 0;
 	int style = CREATE_STYLE_DEFAULT;
 
 	bool error = false;
-	if( !fromData( args , "bigsize" , bigsize ) )
-	{
-		std::cout << "Error no bigsize specified." << std::endl;
-		error = true;
-	}
 	if( !fromData( args , "size" , size ) )
 	{
 		std::cout << "Error no size specified." << std::endl;
@@ -127,7 +121,6 @@ bool Create::run( StrStrMap& args )
 
 	// Open File
 	float current;
-	long vertexCountSide = bigsize / size;
 	long xmax;
 	float yspot;
 	float xspot;
@@ -136,14 +129,14 @@ bool Create::run( StrStrMap& args )
 	{
 		case CREATE_STYLE_TRIANGLE :
 		{
-			for( long y = 0 ; y < vertexCountSide ; ++y )
+			for( long y = 0 ; y < size ; ++y )
 			{
 				xmax = y+1;
 				yspot = y * size;
-				xspot = -((xmax-1) / 2.0f) * size;
+				xspot = -((xmax-1) / 2.0f);
 				for( long x = 0 ; x < xmax ; ++x )
 				{
-					current = noise.getPointAt( xspot + (x * size) , yspot );
+					current = noise.getPointAt( xspot + x , yspot );
 		//			std::cout << current << " ";
 					// output current
 				}
@@ -153,12 +146,12 @@ bool Create::run( StrStrMap& args )
 		}
 		case CREATE_STYLE_RECTANGLE :
 		{
-			for( long y = 0 ; y < vertexCountSide ; ++y )
+			for( long y = 0 ; y < size ; ++y )
 			{
 				yspot = y * size;
-				for( long x = 0 ; x < vertexCountSide ; ++x )
+				for( long x = 0 ; x < size ; ++x )
 				{
-					current = noise.getPointAt( x * size , yspot );
+					current = noise.getPointAt( x , yspot );
 		//			std::cout << current << " ";
 					// output current
 				}

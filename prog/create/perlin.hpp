@@ -22,7 +22,6 @@ protected:
 	float max;
 	float extraUpscale;
 	int dimension;
-	long vertexCountSide;
 	float *map;
 
 	float getNoiseAt( float x , float y ) const;
