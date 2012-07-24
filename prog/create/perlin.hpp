@@ -20,6 +20,7 @@ protected:
 	float size;
 	float min;
 	float max;
+	float extraUpscale;
 	int dimension;
 	long vertexCountSide;
 	float *map;

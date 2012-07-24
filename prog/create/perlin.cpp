@@ -17,6 +17,7 @@ Perlin::Perlin()
   size( 0 ),
   min( 0 ),
   max( 0 ),
+  extraUpscale( 1.0f ),
   dimension( 0 ),
   vertexCountSide( 0 ),
   map( NULL )
@@ -53,6 +54,10 @@ bool Perlin::initialize( const StrStrMap& args )
 	{
 		std::cout << "Error no max specified." << std::endl;
 		error = true;
+	}
+	if( !fromData( args , "extraupscale" , extraUpscale ) )
+	{
+		std::cout << "Warning! No extraupscale specified. defaulting to " << extraUpscale << "." << std::endl;
 	}
 
 	// validity Checks!
@@ -212,7 +217,7 @@ float Perlin::samplePointSquare( float x , float y ) const
 float Perlin::getNoiseAt( float x , float y ) const
 {
 //	return samplePointSquare( x*0.2 , y*0.2 , map , dimension );
-	float upscale = (dimension / (float)bigsize)/3.0f;
+	float upscale = (dimension / (float)bigsize)/extraUpscale;
 	float val = 0;
 	float weight = 0.5f;
 	while( upscale < 1.0f )
