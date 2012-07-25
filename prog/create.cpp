@@ -30,6 +30,7 @@ Create::~Create()
 
 void Create::help( const StrStrMap& args ) const
 {
+	std::cout << "Create help." << std::endl;
 }
 
 bool Create::shouldRun( const StrStrMap& args ) const
@@ -39,8 +40,6 @@ bool Create::shouldRun( const StrStrMap& args ) const
 
 bool Create::run( const StrStrMap& args )
 {
-	std::cout << "Running create." << std::endl;
-
 	// Check that all needed things are in args, if not, bail out.
 	std::string type;
 	NoiseInterface *noiseptr = NULL;

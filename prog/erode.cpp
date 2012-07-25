@@ -17,6 +17,7 @@ Erode::~Erode()
 
 void Erode::help( const StrStrMap& args ) const
 {
+	std::cout << "Erode help." << std::endl;
 }
 
 bool Erode::shouldRun( const StrStrMap& args ) const

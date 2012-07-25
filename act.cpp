@@ -10,9 +10,10 @@
 #include "prog/merge.hpp"
 #include "prog/erode.hpp"
 
-int act( StrStrMap& args )
+int act( StrStrMap& args , bool help )
 {
 	srand( time(NULL) ); // init random..
+	std::string strtmp;
 
 	Create create;
 	Erode erode;
@@ -20,21 +21,33 @@ int act( StrStrMap& args )
 
 	if( create.shouldRun( args ) )
 	{
-		if( !create.run( args ) )
+		if( help )
+		{
+			create.help( args );
+		}
+		else if( !create.run( args ) )
 		{
 			return -1;
 		}
 	}
 	if( merge.shouldRun( args ) )
 	{
-		if( !merge.run( args ) )
+		if( help )
+		{
+			merge.help( args );
+		}
+		else if( !merge.run( args ) )
 		{
 			return -1;
 		}
 	}
 	if( erode.shouldRun( args ) )
 	{
-		if( !erode.run( args ) )
+		if( help )
+		{
+			erode.help( args );
+		}
+		else if( !erode.run( args ) )
 		{
 			return -1;
 		}

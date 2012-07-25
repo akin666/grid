@@ -10,6 +10,6 @@
 
 #include "common.hpp"
 
-int act( StrStrMap& args );
+int act( StrStrMap& args , bool help );
 
 #endif // ACT_HPP_ 

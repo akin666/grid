@@ -17,6 +17,7 @@ Merge::~Merge()
 
 void Merge::help( const StrStrMap& args ) const
 {
+	std::cout << "Merge help." << std::endl;
 }
 
 bool Merge::shouldRun( const StrStrMap& args ) const

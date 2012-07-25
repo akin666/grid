@@ -9,14 +9,10 @@
 #include "common.hpp"
 #include "act.hpp"
 
-void help()
-{
-	std::cout << "plane help:" << std::endl;
-}
-
-bool parseArgs( int argc , char *argv[] , StrStrMap& args )
+bool parseArgs( int argc , char *argv[] , StrStrMap& args , bool& help )
 {
 	// 0 == exec
+	help = false;
 	for( int i = 1 ; i < argc ; ++i )
 	{
 		if( argv[i][0] == '-' )
@@ -25,8 +21,8 @@ bool parseArgs( int argc , char *argv[] , StrStrMap& args )
 
 			if( key == "?" )
 			{
-				help();
-				return false;
+				help = true;
+				continue;
 			}
 
 			++i;
@@ -39,8 +35,8 @@ bool parseArgs( int argc , char *argv[] , StrStrMap& args )
 		}
 		else if( argv[i][0] == '?' )
 		{
-			help();
-			return false;
+			help = true;
+			continue;
 		}
 	}
 	return true;
@@ -48,13 +44,13 @@ bool parseArgs( int argc , char *argv[] , StrStrMap& args )
 
 int main( int argc , char *argv[] )
 {
-	help();
+	bool help;
 
 	StrStrMap args;
-	if( !parseArgs( argc , argv , args ) )
+	if( !parseArgs( argc , argv , args , help ) )
 	{
 		return 0;
 	}
 
-	return act( args );
+	return act( args , help );
 }
