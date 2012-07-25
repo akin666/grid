@@ -29,6 +29,7 @@ public:
 	Perlin();
 	virtual ~Perlin();
 
+	virtual void help() const;
 	virtual bool initialize( const StrStrMap& args );
 	virtual bool debugOutput() const;
 	virtual float getPointAt( float x , float y ) const;

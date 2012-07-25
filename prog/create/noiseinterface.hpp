@@ -18,6 +18,7 @@ class NoiseInterface
 public:
 	virtual ~NoiseInterface() {}
 
+	virtual void help() const = 0;
 	virtual bool initialize( const StrStrMap& args ) = 0;
 	virtual bool debugOutput() const = 0;
 	virtual float getPointAt( float x , float y ) const = 0;

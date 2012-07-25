@@ -13,11 +13,11 @@
 class Interface
 {
 public:
-	Interface() {}
-	virtual ~Interface() {}
+	virtual ~Interface();
 
-	virtual bool shouldRun( StrStrMap& args ) = 0;
-	virtual bool run( StrStrMap& args ) = 0;
+	virtual void help( const StrStrMap& args ) const = 0;
+	virtual bool shouldRun( const StrStrMap& args ) const = 0;
+	virtual bool run( const StrStrMap& args ) = 0;
 };
 
 #endif // INTERFACE_HPP_ 

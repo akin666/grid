@@ -1,24 +1,24 @@
 /*
- * create.hpp
+ * erode.hpp
  *
- *  Created on: 21.7.2012
+ *  Created on: 25.7.2012
  *      Author: akin
  */
 
-#ifndef CREATE_HPP_
-#define CREATE_HPP_
+#ifndef ERODE_HPP_
+#define ERODE_HPP_
 
 #include "interface.hpp"
 
-class Create : public Interface
+class Erode : public Interface
 {
 public:
-	Create();
-	virtual ~Create();
+	Erode();
+	virtual ~Erode();
 
 	virtual void help( const StrStrMap& args ) const;
 	virtual bool shouldRun( const StrStrMap& args ) const;
 	virtual bool run( const StrStrMap& args );
 };
 
-#endif // CREATE_HPP_ 
+#endif // ERODE_HPP_ 

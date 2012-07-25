@@ -22,6 +22,10 @@ Flat::~Flat()
 {
 }
 
+void Flat::help() const
+{
+}
+
 bool Flat::initialize( const StrStrMap& args )
 {
 	bool error = false;

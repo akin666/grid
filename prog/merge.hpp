@@ -1,24 +1,24 @@
 /*
- * create.hpp
+ * merge.hpp
  *
- *  Created on: 21.7.2012
+ *  Created on: 25.7.2012
  *      Author: akin
  */
 
-#ifndef CREATE_HPP_
-#define CREATE_HPP_
+#ifndef MERGE_HPP_
+#define MERGE_HPP_
 
 #include "interface.hpp"
 
-class Create : public Interface
+class Merge : public Interface
 {
 public:
-	Create();
-	virtual ~Create();
+	Merge();
+	virtual ~Merge();
 
 	virtual void help( const StrStrMap& args ) const;
 	virtual bool shouldRun( const StrStrMap& args ) const;
 	virtual bool run( const StrStrMap& args );
 };
 
-#endif // CREATE_HPP_ 
+#endif // MERGE_HPP_ 

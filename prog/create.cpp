@@ -28,12 +28,16 @@ Create::~Create()
 {
 }
 
-bool Create::shouldRun( StrStrMap& args )
+void Create::help( const StrStrMap& args ) const
+{
+}
+
+bool Create::shouldRun( const StrStrMap& args ) const
 {
 	return args.find( "create" ) != args.end();
 }
 
-bool Create::run( StrStrMap& args )
+bool Create::run( const StrStrMap& args )
 {
 	std::cout << "Running create." << std::endl;
 

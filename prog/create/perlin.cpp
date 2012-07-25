@@ -28,6 +28,10 @@ Perlin::~Perlin()
 	map = NULL;
 }
 
+void Perlin::help() const
+{
+}
+
 bool Perlin::initialize( const StrStrMap& args )
 {
 	bool error = false;
