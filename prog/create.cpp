@@ -8,6 +8,7 @@
 #include "create.hpp"
 #include "create/noiseinterface.hpp"
 #include "create/perlin.hpp"
+#include "create/flat.hpp"
 #include <fstream>
 #include <iostream>
 
@@ -99,6 +100,10 @@ bool Create::run( StrStrMap& args )
 	if( type == "perlin" )
 	{
 		noiseptr = new Perlin;
+	}
+	else if( type == "flat" )
+	{
+		noiseptr = new Flat;
 	}
 	else
 	{

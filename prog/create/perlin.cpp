@@ -13,8 +13,7 @@ namespace create
 {
 
 Perlin::Perlin()
-: bigsize( 0 ),
-  size( 0 ),
+: size( 0 ),
   min( 0 ),
   max( 0 ),
   extraUpscale( 1.0f ),

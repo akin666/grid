@@ -7,7 +7,7 @@
 //============================================================================
 
 #include "common.hpp"
-#include "prog/act.hpp"
+#include "act.hpp"
 
 void help()
 {

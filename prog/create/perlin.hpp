@@ -16,7 +16,6 @@ namespace create
 class Perlin : public NoiseInterface
 {
 protected:
-	float bigsize;
 	float size;
 	float min;
 	float max;

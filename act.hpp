@@ -8,7 +8,7 @@
 #ifndef ACT_HPP_
 #define ACT_HPP_
 
-#include "../common.hpp"
+#include "common.hpp"
 
 int act( StrStrMap& args );
 
